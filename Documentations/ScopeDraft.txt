@@ -6,21 +6,26 @@ Proposal : A game to teach programming.
   B: Programming Lessons
     PL-T1: Structured (Sequential, "classic")
       1.0 concepts
+
       1.1 Program Structure
         * visualize common used code blocks / structures
         + log "Hello, world!"
         + basic function (usage)
+
       1.2 Variable Declaration
         + variable type
         + arithmetic
         ++ array (static sized)
         ++ structure
+
       1.3 Looping Structures
         + for loop
         + while loop (do-while/while-do)
+        
       1.4 Control Structures
         + if-else
         + switch-case
+
       1.5 Syntax [?, since we use block/flow chart]
 
     PL-T2: Object-Oriented Programming
@@ -32,6 +37,49 @@ Proposal : A game to teach programming.
       Theme :     Sci-fi
       Setting :   Mars Expandation (+ first E.T. encounter/ Mars disaster)
       Genre :     RTS + Automation (+ Management?)
+
+    GDD-?A 
+      T0 : Robot Standards
+        0.1 Operation mode
+          Auto : Programable automations
+            - has debug mode, step, reb
+
+          Manual : RTS-style commanding/Management
+            - has limitation on how many you can manually control the same time
+
+          *can toggle between mode, reboot, shutdown
+
+        0.2 Library
+          0.2.1 standardIO
+          - terminal, messaging
+            (log, debug, warning, error)
+            *with arguement to show them in the overworld
+
+          - identifier, tags
+
+          0.2.2 standardRobot
+          - movement (primitive)
+            (forward, backward, rotate)
+
+          - itemHandling
+            (pickup, drop, pushIn, pullOut)
+
+          - mining
+            (mine[ground, rock, mountain, debris])
+
+          - combat
+            (meleeAt, shootAt)
+
+          - construction
+            (build, deconstruct)
+
+          - scan
+            (scanOre, scanBuilding, scanEntity)
+
+
+      T1 : prototype, frontier generations
+        Static stats robot
+          - use structured programming (PL-T1)
 
 [References]
   Programming Concept
