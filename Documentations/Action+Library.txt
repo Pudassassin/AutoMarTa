@@ -1,0 +1,83 @@
+Make a clear objective:
+    + Make game enjoyable (*goal in project)
+        -fun?
+        -art?
+        -design?
+        -experience?
+
+Goal : Setup Automation to accomplish the objective
+How?
+    0 Design and Program
+        Analyse problem / vulnerability
+        Design Robot loadout
+        Program
+        Test
+        Save Design/Program
+
+    1 Gather resource
+        Search ore
+            -via beacon (Manual)
+            -scan for ore and memorize (Auto)
+        Travel
+            -move to target
+        Mine
+            -mine
+        Retrive
+            -pick up / retrive
+        Deliver / Stock up
+            -drop / store
+    
+    2 Build base / robot
+        Search target
+            -scan for building
+            -scan for stockpile / silo
+        Travel
+        Retrive
+        Deliver
+        (Building) Build
+
+    3 Defend
+
+    4 Mission
+
+
+Core Mechanic
+    - Automation
+        > Design and Program Robots
+        > Setup Sub-systems
+            Mining
+            Combat
+            Logistic
+            Build/Repair
+    - Management
+        > Micro-manage (Limited-delayed)
+            Beacon systems
+            Manual control
+            Tactic
+        > Macro-manage
+
+
+
+
+Robot Program Library
+    + Variable Type
+        - Vector        [(X, Y) coordination]
+        - Tag           [enums]
+        - Number        [single real]
+
+        - Entity        [objects reference]
+            >Vector     Position    
+            >List<Tag>  TagList
+
+        - Beacon        [signal reference]
+            >Vector     Position
+
+    + MoveTo
+        [INPUT]
+        >Vector Position
+
+        [OUTPUT]
+
+        [ACTION]
+        >Take 1 turn to complete
+        >Move

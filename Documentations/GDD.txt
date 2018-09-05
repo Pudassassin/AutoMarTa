@@ -11,8 +11,10 @@ GDD Template Written by: Benjamin “HeadClot” Stanley
   Core Gameplay Mechanics Brief
     - (Phase 1) Programmable automations 
     - (Phase 1) Real-time management/strategy
+    - (Phase 1) Sandbox, Prototyping
     - (Phase 2) Modular robots, buildings
-    - (Phase 3) Sandbox, Survival
+    - (Phase 2) Tutorials, Missions
+    - (Phase 3) Survival
 
   Targeted platforms
     - PC/MAC (UnityEngine)
