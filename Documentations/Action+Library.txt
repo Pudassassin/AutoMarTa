@@ -57,27 +57,307 @@ Core Mechanic
         > Macro-manage
 
 
+Rule - Entity
+    > Entity included
+        -Robots
+        -Items
+        -Buildings
+        -Map objects (Objective, ore, )
+
+    > Entity has the following accessible data:
+        -List<Tag>  IDTag
+        -List<Tag>  StatusTag
+        -Number     HP, MaxHP
+        -Vector     Position
+        -
+
+    > Most of Robots can move and interact with other Entities
+
+Rule - Field, Map
+    > Coordinate system, free positioning
+    > no two Entities can overlap
+    > collision will interrupt Movement Actions
+
+Rule - Game flow
+    > Turn/Cycle based
+    > Each turn, one Robot can perform one Action
+    > Before beginning the cycle, all Robot execute all Function or Processing Code
+      until next Action Code is reached
+    > All Robots do one Action per cycle:
+        -any Action Code
+        -"No Action" Code
+        -"End", "Pause" Code
+        -Interrupts
+
+Program Structure
+    > Given (wip)
+        EQUALITY_THESHOLD = 10e-3
+        - a theshold to consider equal between two numeral value
+
+        CODES_PER_CYCLE   = 50
+        - a limit to balance out processing power among all Robot
+
+        LOOP_LIMIT        = 5
+        - a limit to terminate Robot's execution if it is stuck in infinite loop
+
+    > Has Variable types
+        -Number
+            > natural number
+            > 12, 34.5, etc.
+        -Vector
+            > Pair of Numbers, Mainly to tell and calculate Entities' positions
+            > (12.3, 45), (64.7, 99.99), etc.
+        -Entity
+            > Reference to an in-game Entity
+        -Tag
+            > Enumeration, string that identify something
+        -Boolean
+            > True or False, that is it.
+
+    > Data Processing
+        -Number
+            Calculation (Number & Number get new Number)
+            [+, -, mul, div, mod (decimals are floor'd down)]
+            
+            Calculation (Number & Vector get re-scaled Vector)
+            [mul/div]
+
+            Comparation (Number & Number get Boolean result)
+            [>, >=, <, <=, != (approx.), == (approx.)]
+
+            Equality
+            - Two Numbers has the difference less than EQUALITY_THESHOLD
+
+            Processing
+            - ceiling > return Number rounding up to an integer
+            - floor > return Number rounding down to an integer
+            - (balanced) round > round the Number to integer, fairly
+            - clamp > return back the Number if it falls within min-max range,
+              or one of the borders otherwise
+            - absolute > return positive Number
+            - sign > get -1, 0 or 1 depends on sign, EQUALITY_THESHOLD applied to Zero
+            - random > get randomized Number within range, inclusive
+
+        -Vector
+            Calculation (Vector & Vector get new Vector)
+            [+, -]
+
+            Comparation (Vector & Vector get Boolean result)
+            [==, !=]
+            
+            Equality
+            - Subtraction of two Vectors resulting in a Vector of magnitude
+              less than EQUALITY_THESHOLD
+
+            Processing
+            - normalize > return Vector with magnitude of 1
+            - magnitude > return magnitude of Vector as Number
+            - getDirection > get Vector's direction in degree
+              (north is 0 degree counting clockwise as positive)
+            - getX / getY > extract Number out of Vector
+
+        -Entity
+            Comparation (Entity & Entity get Boolean result)
+            - isSame > True if it is the exactly same ref. to one Entity
+            - isSimilar > True if their List of Tags contain the same elements
+
+            
+    > Has Variable structure
+        -List
+            > dynamic array that can:
+              - add/insert new element
+              - delete an element (the rest is shifted up)
+              - check if certain element is in the list (Rule of Equality)
+                - return index if exists, -1 otherwise
+              - get element of specific index (decimal is floor'd)
+              - get elements count
+              - indexing starts from first element with index 1
 
 
-Robot Program Library
-    + Variable Type
-        - Vector        [(X, Y) coordination]
-        - Tag           [enums]
-        - Number        [single real]
+    > Has Code types :
+        -Actions
+            > Code that will make change to the game world if performed
+            > Interact within game turn/cycle
+            > Also include (considered Explicit Action and not an error):
+              - "No Action" : make Robot to do nothing for a cycle
+              - "Pause"     : halt Robot, can manually order it to continue
+              - "End"       : terminate Robot, has to restart it
+        -Functions
+            > Code that simplified Processings
+        -Processings
+            > Code that involved calculation or data processing
+            > such as to check if an Entity has the Tag(s) in question, get Boolean
+            > etc.
+    
+    > Has Intterupts:
+        -Timed Out
+          > when a Robot executed non-Action Code exceeding CODE_PER_CYCLE limit
+          > cause Robot to do nothing for that cycle, will resume execution afterward
+        -Halted
+          > 
+        -Terminated
+          > A Robot has been halted several times without Explicit Action
+          > End the Robot execution and warn player to reconsider the Code
 
-        - Entity        [objects reference]
-            >Vector     Position    
-            >List<Tag>  TagList
+    > Conditional/Flow control
+        - If-Else
+        - Loop
+            > Loop forever
+            > Loop [Number] times (floor'd down)
+            > Loop until [Boolean]
+    * can be nested
+    * make a Robot "Timed Out" for a cycle if that Robot has execute non-Action Codes for CODE_PER_CYCLE
+    * "End" the robot if stuck in a loop without doing any Action for LOOP_LIMIT cycles in row
 
-        - Beacon        [signal reference]
-            >Vector     Position
+RobotProcessings
+    + Scan
+        radius, output list of entities
+    + GetPosition
+        entity, output vector position
+    + CheckTag
+        entity + tag(s), output boolean
+    + CheckDamage
+        entity, output number percentage
+ 
+RobotActions
+    *failed/invalid actions leave robot standing still
 
     + MoveTo
         [INPUT]
-        >Vector Position
+        1>(Vector) target Position
+            The absolute position on the world
+        
+        2>(Number) Max Distance (Optional)
 
         [OUTPUT]
+        >(Boolean) Success
+            Return true if action is executed without error
+            (No collision, blocking, moved less than max)
 
         [ACTION]
         >Take 1 turn to complete
-        >Move
+        >Move toward target position (or as near as possible)
+        >Move up to max movement stat. (or as in input 2>)
+        >Auto path-finding
+
+    + MoveAway
+        [INPUT]
+        1>(Vector) target Position
+            The absolute position on the world
+        
+        2>(Number) Max Distance (Optional)
+
+        [OUTPUT]
+        >(Boolean) Success?
+            Return true if action is executed without error
+            (No collision, blocking, moved less than max)
+
+        [ACTION]
+        >Take 1 turn to complete
+        >Move backward away from target position
+        >Move up to max movement stat. (or as in input 2>)
+        >Reverse movement
+
+    + Attack
+        [INPUT]
+        1>(Entity) target Entity
+
+        2>(Boolean) force attack (optional)
+
+        [OUTPUT]
+        >(Boolean) Success?
+            True if attack is successful
+
+        [ACTION]
+        >Take varied number of turn to attack (Weapon stat.)
+        >Attempt to attack target entity, straightforward
+        !Cannot attack if...
+            - Reloading/Cooling down
+            - Carrying item
+            - Is disabled (Debuff)
+            - invalid target (unless forced attack)
+
+    + AttackGround
+        [INPUT]
+        1>(Vector) target Position
+
+        2>(Boolean) force attack
+
+        [OUTPUT]
+        >(Boolean) Success?
+            True if attack is successful
+
+        [ACTION]
+        >Similar to normal Attack, but toward target position instead
+        >Forced attack will hit any entity
+
+    + Mine
+        [INPUT]
+        1>(Entity) target Ore
+
+        [OUTPUT]
+        >(Boolean) Success?
+
+        [ACTION]
+        >Attempt to mine from target Ore
+        >Auto-PickUp the resulting item
+        !Cannot mine if 
+            - Carrying item
+            - Is disabled (Debuff)
+            - Out of range
+
+    + PickUp
+        [INPUT]
+        1>(Entity) target Item
+
+        [OUTPUT]
+        >(Boolean) Success?
+
+        [ACTION]
+        >Attempt to pick up target Item
+        !Cannot pick up if
+            - Carrying another item or at max cap.
+            - Is disabled (Debuff)
+
+    + DropAt
+        [INPUT]
+        1>(Vector) target Position
+
+        [OUTPUT]
+        >(Boolean) Success?
+
+        [ACTION]
+        >Attempt to drop (one of) currently holding Item
+        !Cannot drop if
+            - Target obstructed by non-Item Entity
+            - Not carrying anything
+            - Is disabled (Debuff)
+        *robot drop all if destroyed
+
+    + StoreTo / RetriveFrom
+        [INPUT]
+        1>(Entity) target Building with Inventory
+
+        2>(Number) quantity to take ,round down (Optional)
+
+        [OUTPUT]
+        >(Boolean) Success?
+
+        [ACTION]
+        >Transfer item to or from target Building
+        >Will treat as single Item Entity
+        >Up to max capacity or as specified
+        >follow the rule of PickUp / DropAt
+        !Can interact with
+            - Stockpile, Silo
+            - Refinery
+            - Construction site
+            - Objective
+            - Etc.
+    
+    + Build
+        target site, return progress left
+
+    + Repair*
+        target entity, return percentage health after
+
