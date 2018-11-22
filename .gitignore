@@ -1,3 +1,16 @@
 .vscode/settings.json
 
 Documentations/~\$me Design Document\.docx
+Game/Automarta/Library/
+Game/Automarta/Temp/
+Game/Automarta/.vs/Automarta/v15/.suo
+Game/Automarta/UnityEditor.StandardEvents.csproj
+Game/Automarta/Unity.TextMeshPro.csproj
+Game/Automarta/Unity.TextMeshPro.Editor.csproj
+Game/Automarta/Unity.PackageManagerUI.Editor.csproj
+Game/Automarta/Automarta.sln
+Game/Automarta/Automarta.csproj
+Game/Automarta/.vs/Automarta/v15/Server/sqlite3/storage.ide-wal
+Game/Automarta/.vs/Automarta/v15/Server/sqlite3/storage.ide-shm
+Game/Automarta/.vs/Automarta/v15/Server/sqlite3/storage.ide
+Game/Automarta/.vs/Automarta/v15/Server/sqlite3/db.lock
